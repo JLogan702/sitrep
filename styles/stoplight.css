@@ -1,0 +1,44 @@
+
+.stoplight-wrapper {
+  position: relative;
+  width: 80px;
+  height: 200px;
+  margin: 0 auto;
+  background-image: url('../img/stoplight.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.glow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow: 0 0 15px 8px currentColor;
+}
+
+.glow.red {
+  top: 10px;
+  color: red;
+}
+.glow.yellow {
+  top: 78px;
+  color: yellow;
+}
+.glow.green {
+  top: 145px;
+  color: limegreen;
+}
+
+.blink {
+  animation: blink 1.2s infinite;
+  opacity: 1 !important;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 1; }
+}
