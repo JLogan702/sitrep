@@ -1,54 +1,25 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Brand Growth Platform – Project Pulse Check</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles/main.css">
+  <script src="scripts/dashboard.js" defer></script>
 </head>
 <body>
   <h1>Brand Growth Platform – Project Pulse Check</h1>
-  <label for="viewSelector">Choose a view:</label>
-  <select id="viewSelector" onchange="switchView()">
-    <option value="sitrep">SITREP</option>
-    <option value="readiness">Sprint Readiness</option>
-    <option value="backlog">Backlog Health</option>
-  </select>
-
-  <div id="dashboard-content">
-    
-<div id="backlog-view" class="view-block" style="display: none;">
-  <h2>🟡 Backlog Health by Team</h2>
-  <div id="backlog-teams">
-    <!-- Team blocks will be dynamically inserted here -->
-  </div>
-</div>
-
-    
-<div id="readiness-view" class="view-block" style="display: none;">
-  <h2>🟢 Sprint Readiness by Team</h2>
-  <div id="readiness-teams">
-    <!-- Team blocks will be dynamically inserted here -->
-  </div>
-</div>
-
-    
-<div id="sitrep-view" class="view-block">
-  <h2>📍 Situation Report (SITREP)</h2>
-  <div class="stoplight-container">
-    <img id="sitrep-red" src="img/blinking_stoplight_red.gif" class="stoplight" style="display: none;">
-    <img id="sitrep-yellow" src="img/blinking_stoplight_yellow.gif" class="stoplight" style="display: none;">
-    <img id="sitrep-green" src="img/blinking_stoplight_green.gif" class="stoplight" style="display: none;">
-  </div>
-  <div class="sitrep-summary">
-    <p id="sitrep-score">Sprint Readiness: --%<br>Backlog Health: --%</p>
-    <p id="sitrep-explanation">Loading SITREP summary...</p>
-  </div>
-</div>
-
-    <!-- Dynamic content will be injected here -->
+  <div class="selector">
+    <label for="view-select">Choose a view:</label>
+    <select id="view-select">
+      <option value="sitrep">SITREP</option>
+      <option value="readiness">Sprint Readiness</option>
+      <option value="backlog">Backlog Health</option>
+    </select>
   </div>
 
-  <script src="scripts/dashboard.js"></script>
+  <div id="main-content">
+    <!-- Dynamically rendered dashboard blocks will go here -->
+  </div>
 </body>
 </html>
