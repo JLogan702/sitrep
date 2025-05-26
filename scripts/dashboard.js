@@ -8,11 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function loadView(view) {
-    mainContent.innerHTML = ''; // Clear
+    mainContent.innerHTML = '';
     if (view === 'sitrep') {
       renderSITREP();
     } else {
-      renderTeams(view);
+      renderTeamCards(view);
     }
   }
 
@@ -28,19 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
         block.innerHTML = `
           <h3>📌 Situation Report (SITREP)</h3>
           <div class="stoplight-wrapper">
+            <img src="img/stoplight.png" width="50">
             <div class="glow red ${status === 'red' ? 'blink' : ''}"></div>
             <div class="glow yellow ${status === 'yellow' ? 'blink' : ''}"></div>
             <div class="glow green ${status === 'green' ? 'blink' : ''}"></div>
           </div>
           <p><strong>Sprint Readiness:</strong> ${data.readiness_score}%</p>
           <p><strong>Backlog Health:</strong> ${data.backlog_score}%</p>
-          <p>🔎 This score reflects an average across all teams. Green = Ready to go, Red = Requires urgent grooming effort.</p>
+          <p>🧠 This reflects the average readiness and grooming across all teams.</p>
         `;
         mainContent.appendChild(block);
       });
   }
 
-  function renderTeams(view) {
+  function renderTeamCards(view) {
     const source = view === 'readiness' ? 'readiness_scores.json' : 'backlog_scores.json';
     fetch('data/' + source)
       .then(res => res.json())
@@ -50,17 +51,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data.forEach(team => {
           const status = getStatus(team.score);
+          const chartFile = `img/${team.team.toLowerCase().replace(/\s+/g, '_')}_${view}_chart.png`;
+
           const card = document.createElement('div');
           card.className = 'card';
           card.innerHTML = `
             <h3>${team.team}</h3>
             <div class="stoplight-wrapper">
+              <img src="img/stoplight.png" width="50">
               <div class="glow red ${status === 'red' ? 'blink' : ''}"></div>
               <div class="glow yellow ${status === 'yellow' ? 'blink' : ''}"></div>
               <div class="glow green ${status === 'green' ? 'blink' : ''}"></div>
             </div>
-            <p>${team.numerator} of ${team.denominator} stories ${view === 'readiness' ? 'ready for dev' : 'in New or Grooming'}</p>
-            <p>(${team.score.toFixed(1)}%)</p>
+            <p>${team.numerator} of ${team.denominator} stories ${view === 'readiness' ? 'ready for dev' : 'groomed'}</p>
+            <p>Score: ${team.score}%</p>
+            <img src="${chartFile}" alt="Chart" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<p>📉 No chart available</p>');">
             <p>${getExplanation(view)}</p>
           `;
           grid.appendChild(card);
@@ -78,11 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function getExplanation(view) {
     if (view === 'readiness') {
-      return '💡 Measures how many stories in the next sprint are ready for development.';
+      return '💡 Stories considered ready must be in "To Do" or "Ready for Development" and assigned to the next sprint.';
     } else {
-      return '💡 Measures how much of the backlog (not in a sprint) is groomed and ready.';
+      return '💡 Groomed backlog means stories in "New" or "Grooming" that are not in any sprint.';
     }
   }
 
-  loadView('sitrep'); // Load default
+  loadView('sitrep');
 });
