@@ -1,56 +1,52 @@
 
 import pandas as pd
-import datetime
 import json
 
-SPRINT_FIELD = 'Sprint'
-STATUS_FIELD = 'Status'
-COMPONENT_FIELD = 'Component'
-TODAY = datetime.date.today()
+SPRINT_FIELD = "Sprint"
+STATUS_FIELD = "Status"
+COMPONENT_FIELD = "Component"
+READY_STATUSES = ["To Do", "Ready for Development"]
 
-SPRINT_SWITCH_DATES = {
-    'Sprint 6': datetime.date(2025, 5, 21),
-    'Sprint 7': datetime.date(2025, 6, 4),
-    'Sprint 8': datetime.date(2025, 6, 18)
+# Define team-to-sprint ID mapping for Sprint 7
+SPRINT_IDS = {
+    "Engineering - Platform": 982,
+    "Engineering - Product": 985,
+    "Data Science": 1000,
+    "Design": 987,
+    "Engineering - AI Ops": 0,  # If known, replace with correct ID
+    "AdTech 1.0": 0             # If known, replace with correct ID
 }
-
-def get_current_sprint():
-    for sprint, date in reversed(SPRINT_SWITCH_DATES.items()):
-        if TODAY >= date:
-            return sprint
-    return 'Sprint 6'
 
 def calculate_readiness_scores(csv_path):
     df = pd.read_csv(csv_path)
-    sprint = get_current_sprint()
-    in_sprint = df[df[SPRINT_FIELD] == sprint]
-    teams = in_sprint[COMPONENT_FIELD].unique()
+    df = df[[SPRINT_FIELD, STATUS_FIELD, COMPONENT_FIELD]].copy()
 
-    results = []
-    for team in teams:
-        subset = in_sprint[in_sprint[COMPONENT_FIELD] == team]
+    team_scores = []
+    for team, sprint_id in SPRINT_IDS.items():
+        if sprint_id == 0:
+            continue  # Skip teams without configured sprint IDs
 
-        def is_ready(row):
-            status = row[STATUS_FIELD].lower()
-            if team == 'Engineering - Product':
-                return 'ready' in status
-            return 'ready' in status or 'to do' in status
+        # Match rows containing the numeric sprint ID
+        mask = df[SPRINT_FIELD].astype(str).str.contains(str(sprint_id), na=False)
+        team_data = df[mask & (df[COMPONENT_FIELD] == team)]
 
-        total = len(subset)
-        ready = subset[subset.apply(is_ready, axis=1)].shape[0]
-        score = (ready / total) * 100 if total > 0 else 0
+        total = len(team_data)
+        ready = team_data[team_data[STATUS_FIELD].isin(READY_STATUSES)]
+        count_ready = len(ready)
+        score = round((count_ready / total) * 100, 1) if total > 0 else 0
 
-        results.append({
-            'team': team,
-            'total': total,
-            'ready': ready,
-            'score': round(score, 1)
+        print("🛠️ ", team, f": {count_ready}/{total} stories ready ({score}%)")
+
+        team_scores.append({
+            "team": team,
+            "score": score,
+            "numerator": count_ready,
+            "denominator": total
         })
 
-    with open('sprint_dashboard/data/readiness_scores.json', 'w') as f:
-        json.dump(results, f)
+    with open("data/readiness_scores.json", "w") as f:
+        json.dump(team_scores, f, indent=2)
 
-    print(f"✅ Readiness scores updated for {sprint}: {results}")
+    print("✅ readiness_scores.json updated!")
 
-if __name__ == '__main__':
-    calculate_readiness_scores('sprint_dashboard/data/DashboardData.csv')
+calculate_readiness_scores("data/DashboardData.csv")

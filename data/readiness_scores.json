@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "team": "Engineering - Platform",
+    "score": 0,
+    "numerator": 0,
+    "denominator": 0
+  },
+  {
+    "team": "Engineering - Product",
+    "score": 0,
+    "numerator": 0,
+    "denominator": 0
+  },
+  {
+    "team": "Data Science",
+    "score": 0,
+    "numerator": 0,
+    "denominator": 0
+  },
+  {
+    "team": "Design",
+    "score": 0,
+    "numerator": 0,
+    "denominator": 0
+  }
+]
