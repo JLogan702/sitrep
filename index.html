@@ -5,21 +5,16 @@
   <meta charset="UTF-8">
   <title>Brand Growth Platform – Project Pulse Check</title>
   <link rel="stylesheet" href="styles/main.css">
-  <script src="scripts/dashboard.js" defer></script>
 </head>
 <body>
   <h1>Brand Growth Platform – Project Pulse Check</h1>
-  <div class="selector">
-    <label for="view-select">Choose a view:</label>
-    <select id="view-select">
-      <option value="sitrep">SITREP</option>
-      <option value="readiness">Sprint Readiness</option>
-      <option value="backlog">Backlog Health</option>
-    </select>
-  </div>
-
-  <div id="main-content">
-    <!-- Dynamically rendered dashboard blocks will go here -->
-  </div>
+  <label for="view-select">Choose a view:</label>
+  <select id="view-select">
+    <option value="sitrep">SITREP</option>
+    <option value="readiness">Sprint Readiness</option>
+    <option value="backlog">Backlog Health</option>
+  </select>
+  <div id="main-content"></div>
+  <script src="scripts/dashboard.js"></script>
 </body>
 </html>
